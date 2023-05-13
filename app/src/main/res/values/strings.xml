@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">My Assignment</string>
-    <string name="login_bg">Login background gradient</string>
+    <string name="api_key">36ab95f45b09439294e4f19443b217ff</string>
+    <string name="facebook_application_id">1643627632818919</string>
+    <string name="fb_login_protocol_scheme">fb1643627632818919</string>
+    <string name="facebook_client_token">b4d0b902e34ca519f9c1466c60f50006</string>
 </resources>

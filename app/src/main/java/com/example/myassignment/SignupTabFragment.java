@@ -1,7 +1,9 @@
 package com.example.myassignment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,11 +34,12 @@ public class SignupTabFragment extends Fragment {
     Button regButton;
     ProgressBar progressBar;
     FirebaseAuth mAuth;
+
+    static String countryCode, countryName;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.signup_tab_fragment, container, false);
-
         mAuth = FirebaseAuth.getInstance();
 
         nameEditText = (EditText) root.findViewById(R.id.nameEditText);
@@ -47,62 +52,49 @@ public class SignupTabFragment extends Fragment {
         progressBar = (ProgressBar) root.findViewById(R.id.progressBar);
         signInTextView = (TextView) root.findViewById(R.id.signInTextView);
 
-
         signInTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //SWITCHES FRAGMENT TO LOGIN
                 getFragmentManager().beginTransaction().replace(R.id.constraintLayout, new LoginTabFragment()).addToBackStack(null).commit();
-
             }
         });
 
         regButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name, email, pass, phone, countryCode;
+                String name, email, pass, phone;
                 name = nameEditText.getText().toString();
                 email = emailEditText.getText().toString();
                 phone = phoneEditText.getText().toString();
                 pass = passEditText.getText().toString();
-                countryCode = countryCodePicker.getSelectedCountryCode().toString();
+                countryCode = countryCodePicker.getSelectedCountryCode();
+                countryName = countryCodePicker.getSelectedCountryName();
 
-                if (TextUtils.isEmpty(name)){
-                    nameEditText.setError("Name cannot be empty");
+                if (name.isEmpty()) nameEditText.setError("Name Cannot Be Empty");
+                if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) emailEditText.setError("Fix Email");
+                if (phone.isEmpty()) phoneEditText.setError("Phone Cannot Be Empty");
+                if (pass.length()<8) passEditText.setError("Password Should Have At Least 8 Digits");
+                if (!checkBox.isChecked()) {
+                    Toast.makeText(getContext(), "Agree With Terms And Conditions", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (TextUtils.isEmpty(email)){
-                    emailEditText.setError("Email cannot be empty");
-                    return;
-                }
-                if (TextUtils.isEmpty(phone)){
-                    phoneEditText.setError("Phone cannot be empty");
-                    return;
-                }
-                if (TextUtils.isEmpty(pass)){
-                    passEditText.setError("Password cannot be empty");
-                    return;
-                }
-                    progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 mAuth.createUserWithEmailAndPassword(email, pass)
                         .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 progressBar.setVisibility(View.GONE);
-                                if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
-                                    Toast.makeText(getContext(), "Account Created!",
+                                // Sign in success
+                                if (task.isSuccessful()) Toast.makeText(getContext(), "Account Created, Login To Continue",
                                             Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(getContext(), "Authentication failed.",
+                                // If sign in fails, displaying a message to the user.
+                                else Toast.makeText(getContext(), "Some Error Occurred",
                                             Toast.LENGTH_SHORT).show();
-                                }
                             }
                         });
-                }
+            }
         });
-
-
         return root;
     }
 }

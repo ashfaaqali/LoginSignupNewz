@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="button">#D31027</color>
+    <color name="tab_background_selected">#D31027</color>
+    <color name="tab_background_unselected">@color/white</color>
 </resources>
