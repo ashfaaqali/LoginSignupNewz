@@ -8,7 +8,7 @@ This is an Android application that allows users to sign up and login using thei
 * User login with email and password
 * User ID validation during registration
 * Fragment-based UI for seamless navigation between login and signup
-* Firebase integration for authentication and database management
+* Firebase integration for authentication.
 * User-friendly UI and error handling
 
 ## Technologies Used
@@ -16,7 +16,6 @@ This is an Android application that allows users to sign up and login using thei
 * Java
 * XML
 * Firebase Authentication
-* Firebase Realtime Database
 
 ## Getting Started
 
